@@ -1,15 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Settings, Trash2, Palette, Download, Upload } from "lucide-react";
+import { Trash2, Download, Upload } from "lucide-react";
 import { ChatMessages } from "./ChatMessages";
 import { ChatInput } from "./ChatInput";
 import {
   useMessages,
   useError,
-  useSettings,
   useClearMessages,
-  useUpdateSettings,
   useRetryMessage,
 } from "./hooks";
 
@@ -17,23 +15,17 @@ interface ChatWindowProps {
   title?: string;
   className?: string;
   showHeader?: boolean;
-  showSettings?: boolean;
 }
 
 export function ChatWindow({
   title = "AI Chat Assistant",
   className = "",
   showHeader = true,
-  showSettings = true,
 }: ChatWindowProps) {
   const messages = useMessages();
   const error = useError();
-  const settings = useSettings();
   const clearMessages = useClearMessages();
-  const updateSettings = useUpdateSettings();
   const retryMessage = useRetryMessage();
-
-  const [showSettingsPanel, setShowSettingsPanel] = useState(false);
 
   const handleClearMessages = () => {
     if (
@@ -83,20 +75,13 @@ export function ChatWindow({
     reader.readAsText(file);
   };
 
-  // Early return if settings are not loaded
-  if (!settings || !settings.messageStyle) {
-    return <div>Loading...</div>;
-  }
-
-  const { messageStyle } = settings;
-
   return (
     <div
-      className={`flex flex-col h-full bg-white rounded-lg shadow-lg overflow-hidden ${className}`}
+      className={`chat-window flex flex-col h-full overflow-hidden ${className}`}
     >
       {/* Header */}
       {showHeader && (
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
+        <div className="chat-header flex items-center justify-between p-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
               <svg
@@ -114,151 +99,55 @@ export function ChatWindow({
               </svg>
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-gray-900">{title}</h1>
-              <p className="text-sm text-gray-500">
+              <h1
+                className="text-lg font-semibold"
+                style={{ color: "var(--chat-header-text)" }}
+              >
+                {title}
+              </h1>
+              <p
+                className="text-sm"
+                style={{ color: "var(--chat-header-subtext)" }}
+              >
                 {messages.length} message{messages.length !== 1 ? "s" : ""}
               </p>
             </div>
           </div>
 
-          {showSettings && (
-            <div className="flex items-center gap-2">
-              {/* Import Button */}
-              <label
-                className="p-2 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors"
-                title="Import chat"
-              >
-                <Upload className="w-4 h-4" />
-                <input
-                  type="file"
-                  accept=".json"
-                  onChange={handleImportChat}
-                  className="hidden"
-                />
-              </label>
-
-              {/* Export Button */}
-              <button
-                onClick={handleExportChat}
-                disabled={messages.length === 0}
-                className="p-2 text-gray-400 hover:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                title="Export chat"
-              >
-                <Download className="w-4 h-4" />
-              </button>
-
-              {/* Clear Messages Button */}
-              <button
-                onClick={handleClearMessages}
-                disabled={messages.length === 0}
-                className="p-2 text-gray-400 hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                title="Clear all messages"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-
-              {/* Settings Button */}
-              <button
-                onClick={() => setShowSettingsPanel(!showSettingsPanel)}
-                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                title="Chat settings"
-              >
-                <Settings className="w-4 h-4" />
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Settings Panel */}
-      {showSettingsPanel && (
-        <div className="border-b border-gray-200 bg-gray-50 p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                User Message Color
-              </label>
+          <div className="flex items-center gap-2">
+            {/* Import Button */}
+            <label
+              className="p-2 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors"
+              title="Import chat"
+            >
+              <Upload className="w-4 h-4" />
               <input
-                type="color"
-                value={messageStyle.userBg}
-                onChange={(e) =>
-                  updateSettings({
-                    messageStyle: {
-                      ...messageStyle,
-                      userBg: e.target.value,
-                    },
-                  })
-                }
-                className="w-full h-10 border border-gray-300 rounded-lg cursor-pointer"
+                type="file"
+                accept=".json"
+                onChange={handleImportChat}
+                className="hidden"
               />
-            </div>
+            </label>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                AI Message Color
-              </label>
-              <input
-                type="color"
-                value={messageStyle.aiBg}
-                onChange={(e) =>
-                  updateSettings({
-                    messageStyle: {
-                      ...messageStyle,
-                      aiBg: e.target.value,
-                    },
-                  })
-                }
-                className="w-full h-10 border border-gray-300 rounded-lg cursor-pointer"
-              />
-            </div>
+            {/* Export Button */}
+            <button
+              onClick={handleExportChat}
+              disabled={messages.length === 0}
+              className="p-2 text-gray-400 hover:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              title="Export chat"
+            >
+              <Download className="w-4 h-4" />
+            </button>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Border Radius
-              </label>
-              <input
-                type="range"
-                min="0"
-                max="24"
-                value={parseInt(messageStyle.borderRadius)}
-                onChange={(e) =>
-                  updateSettings({
-                    messageStyle: {
-                      ...messageStyle,
-                      borderRadius: `${e.target.value}px`,
-                    },
-                  })
-                }
-                className="w-full"
-              />
-              <span className="text-sm text-gray-600">
-                {messageStyle.borderRadius}
-              </span>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Padding
-              </label>
-              <input
-                type="range"
-                min="8"
-                max="24"
-                value={parseInt(messageStyle.padding)}
-                onChange={(e) =>
-                  updateSettings({
-                    messageStyle: {
-                      ...messageStyle,
-                      padding: `${e.target.value}px`,
-                    },
-                  })
-                }
-                className="w-full"
-              />
-              <span className="text-sm text-gray-600">
-                {messageStyle.padding}
-              </span>
-            </div>
+            {/* Clear Messages Button */}
+            <button
+              onClick={handleClearMessages}
+              disabled={messages.length === 0}
+              className="p-2 text-gray-400 hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              title="Clear all messages"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
           </div>
         </div>
       )}

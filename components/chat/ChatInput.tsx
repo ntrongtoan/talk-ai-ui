@@ -73,7 +73,10 @@ export function ChatInput({
   const isInputValid = input.trim().length > 0 && !isLoading && !disabled;
 
   return (
-    <div className="border-t border-gray-200 bg-white p-4">
+    <div
+      className="chat-input border-t p-4"
+      style={{ borderColor: "var(--chat-input-border)" }}
+    >
       <form onSubmit={handleSubmit} className="flex items-end gap-3">
         {/* File Upload Button */}
         <button
@@ -116,9 +119,14 @@ export function ChatInput({
             onCompositionEnd={handleCompositionEnd}
             placeholder={placeholder}
             disabled={disabled}
-            className="w-full resize-none border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="w-full resize-none border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            style={{
+              minHeight: "44px",
+              maxHeight: "120px",
+              borderColor: "var(--chat-input-border)",
+              backgroundColor: "var(--chat-input-bg)",
+            }}
             rows={1}
-            style={{ minHeight: "44px", maxHeight: "120px" }}
           />
 
           {/* Character Count */}
@@ -141,8 +149,8 @@ export function ChatInput({
           disabled={!isInputValid || isComposing}
           className={`p-3 rounded-xl transition-all ${
             isInputValid && !isComposing
-              ? "bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95"
-              : "bg-gray-100 text-gray-400 cursor-not-allowed"
+              ? "chat-button-primary hover:scale-95 active:scale-95"
+              : "chat-button-secondary cursor-not-allowed"
           }`}
           title="Send message"
         >

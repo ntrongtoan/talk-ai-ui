@@ -1,40 +1,36 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { ChatWindow } from "../index";
-import { useUpdateSettings } from "../hooks";
 
 export function CustomStyledChat() {
-  const updateSettings = useUpdateSettings();
-
-  useEffect(() => {
-    // Apply custom styling
-    updateSettings({
-      messageStyle: {
-        userTextColor: "#ffffff",
-        aiTextColor: "#1f2937",
-        systemBg: "#fef3c7",
-        systemTextColor: "#92400e",
-        shadow:
-          "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
-        maxWidth: "max-content",
-        minWidth: "200px",
-        userBg: "#8b5cf6", // Purple
-        aiBg: "#f1f5f9", // Light gray
-        borderRadius: "20px",
-        padding: "16px",
-      },
-    });
-  }, [updateSettings]);
-
   return (
     <div className="h-[500px] w-full">
       <ChatWindow
         title="Custom Styled Chat"
         className="h-full"
         showHeader={true}
-        showSettings={true}
       />
+      <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+        <h3 className="font-semibold mb-2">Customization via CSS Variables</h3>
+        <p className="text-sm text-gray-600 mb-2">
+          This chat uses CSS variables for styling. To customize:
+        </p>
+        <ul className="text-sm text-gray-600 list-disc list-inside space-y-1">
+          <li>
+            Edit{" "}
+            <code className="bg-gray-200 px-1 rounded">app/globals.css</code>
+          </li>
+          <li>
+            Modify the{" "}
+            <code className="bg-gray-200 px-1 rounded">--chat-*</code> variables
+          </li>
+          <li>
+            Add dark mode overrides in{" "}
+            <code className="bg-gray-200 px-1 rounded">.dark</code> selector
+          </li>
+        </ul>
+      </div>
     </div>
   );
 }

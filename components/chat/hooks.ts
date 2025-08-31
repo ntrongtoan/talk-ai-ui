@@ -12,12 +12,6 @@ export const useError = () => useChatStore((state) => state.error);
 // Hook for accessing settings
 export const useSettings = () => useChatStore((state) => state.settings);
 
-// Hook for accessing message style settings
-export const useMessageStyle = () => {
-  const settings = useChatStore((state) => state.settings);
-  return settings?.messageStyle;
-};
-
 // Hook for accessing chat actions
 export const useChatActions = () => {
   const store = useChatStore();

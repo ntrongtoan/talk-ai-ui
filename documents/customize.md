@@ -1,29 +1,10 @@
-# Chat Components
+# Chat Window Customization
 
-A fully customizable chat interface built with React and CSS variables. All styling is controlled through CSS custom properties, making it easy to maintain consistent theming across your application.
-
-## Features
-
-- **CSS Variable-Based Styling**: All colors, spacing, and layout controlled through CSS variables
-- **Dark Mode Support**: Automatic dark mode styling with CSS variable overrides
-- **Responsive Design**: Mobile-first design that works on all screen sizes
-- **Accessibility**: Built with accessibility best practices
-- **TypeScript**: Full TypeScript support with comprehensive type definitions
-- **No Runtime Customization**: Stable styling that doesn't change during user interaction
-
-## Quick Start
-
-```tsx
-import { ChatWindow } from "@/components/chat";
-
-export function MyChat() {
-  return <ChatWindow title="My Chat" className="h-full" showHeader={true} />;
-}
-```
+The chat components can be fully customized using CSS variables and global CSS. All styling options are configurable from a single CSS file, making it easy to maintain consistent theming across your application.
 
 ## CSS Variables
 
-The chat system uses CSS custom properties that can be overridden in your global CSS file:
+The chat system uses CSS custom properties (variables) that can be overridden in your global CSS file. Here are all the available variables:
 
 ### Message Styling
 
@@ -44,7 +25,7 @@ The chat system uses CSS custom properties that can be overridden in your global
   /* Message Layout */
   --chat-border-radius: 12px;
   --chat-padding: 16px;
-  --chat-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  --chat-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   --chat-max-width: max-content;
   --chat-min-width: 200px;
 
@@ -54,14 +35,14 @@ The chat system uses CSS custom properties that can be overridden in your global
 }
 ```
 
-### Window Styling
+### Chat Window Styling
 
 ```css
 :root {
   /* Window Container */
   --chat-window-bg: #ffffff;
   --chat-window-border-radius: 8px;
-  --chat-window-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --chat-window-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
   /* Header Styling */
   --chat-header-bg: #f9fafb;
@@ -116,6 +97,7 @@ Add these variables to your `app/globals.css` file:
 ```css
 /* Chat Component Customization */
 :root {
+  /* Message Colors */
   --chat-user-bg: #6366f1;
   --chat-user-text: #ffffff;
   --chat-ai-bg: #f3f4f6;
@@ -123,25 +105,30 @@ Add these variables to your `app/globals.css` file:
   --chat-system-bg: #fef3c7;
   --chat-system-text: #92400e;
 
+  /* Layout */
   --chat-border-radius: 12px;
   --chat-padding: 16px;
   --chat-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   --chat-max-width: max-content;
   --chat-min-width: 200px;
 
+  /* Window */
   --chat-window-bg: #ffffff;
   --chat-window-border-radius: 8px;
   --chat-window-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 
+  /* Header */
   --chat-header-bg: #f9fafb;
   --chat-header-border: #e5e7eb;
   --chat-header-text: #111827;
   --chat-header-subtext: #6b7280;
 
+  /* Input */
   --chat-input-bg: #ffffff;
   --chat-input-border: #e5e7eb;
   --chat-input-focus-ring: #6366f1;
 
+  /* Buttons */
   --chat-button-primary-bg: #6366f1;
   --chat-button-primary-hover: #4f46e5;
   --chat-button-primary-text: #ffffff;
@@ -166,59 +153,115 @@ Add these variables to your `app/globals.css` file:
 }
 ```
 
-### 2. Use the Components
+### 2. Update Component Styles
 
-The components will automatically use these CSS variables:
+The components will automatically use these CSS variables. You can also override specific styles by targeting the component classes:
+
+```css
+/* Custom message bubble styles */
+.chat-message {
+  border-radius: var(--chat-border-radius);
+  padding: var(--chat-padding);
+  box-shadow: var(--chat-shadow);
+}
+
+/* Custom window styles */
+.chat-window {
+  background-color: var(--chat-window-bg);
+  border-radius: var(--chat-window-border-radius);
+  box-shadow: var(--chat-window-shadow);
+}
+
+/* Custom header styles */
+.chat-header {
+  background-color: var(--chat-header-bg);
+  border-bottom: 1px solid var(--chat-header-border);
+}
+```
+
+## Runtime Customization
+
+In addition to CSS variables, you can customize the chat appearance at runtime using the settings panel:
+
+### Available Settings
+
+- **User Message Color**: Background color for user messages
+- **AI Message Color**: Background color for AI messages
+- **Border Radius**: Corner roundness for message bubbles
+- **Padding**: Internal spacing within message bubbles
+
+### Example Usage
 
 ```tsx
-import { ChatWindow, ChatMessage, ChatInput } from "@/components/chat";
+import { ChatWindow } from "@/components/chat";
 
-export function MyChat() {
+export function CustomChat() {
   return (
-    <div className="h-screen">
-      <ChatWindow title="My Chat" className="h-full" showHeader={true} />
-    </div>
+    <ChatWindow
+      title="Custom Chat"
+      className="h-full"
+      showHeader={true}
+      showSettings={true} // Enable settings panel for runtime customization
+    />
   );
 }
 ```
 
-## Examples
+## Advanced Customization
 
-### Simple Chat
+### Custom Message Styles
 
-```tsx
-import { SimpleChat } from "@/components/chat";
+You can create completely custom message styles by extending the CSS:
 
-export function MyPage() {
-  return <SimpleChat />;
+```css
+/* Custom message types */
+.chat-message.user {
+  background: linear-gradient(135deg, var(--chat-user-bg), #4f46e5);
+  color: var(--chat-user-text);
+}
+
+.chat-message.ai {
+  background: linear-gradient(135deg, var(--chat-ai-bg), #e5e7eb);
+  color: var(--chat-ai-text);
+}
+
+/* Custom animations */
+.chat-message {
+  transition: all 0.3s ease;
+}
+
+.chat-message:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 ```
 
-### Custom Styled Chat
+### Responsive Design
 
-```tsx
-import { CustomStyledChat } from "@/components/chat";
+The chat components are fully responsive and can be customized for different screen sizes:
 
-export function MyPage() {
-  return <CustomStyledChat />;
+```css
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  :root {
+    --chat-padding: 12px;
+    --chat-border-radius: 8px;
+    --chat-min-width: 150px;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root {
+    --chat-padding: 14px;
+    --chat-border-radius: 10px;
+  }
 }
 ```
 
-### CSS Variable Example
+## Theme Presets
 
-```tsx
-import { CSSVariableExample } from "@/components/chat";
-
-export function MyPage() {
-  return <CSSVariableExample />;
-}
-```
-
-## Customization
-
-### Theme Presets
-
-Create theme presets by defining multiple sets of CSS variables:
+You can create theme presets by defining multiple sets of CSS variables:
 
 ```css
 /* Light Theme */
@@ -244,32 +287,9 @@ Create theme presets by defining multiple sets of CSS variables:
 }
 ```
 
-### Responsive Design
-
-Customize for different screen sizes:
-
-```css
-/* Mobile optimizations */
-@media (max-width: 768px) {
-  :root {
-    --chat-padding: 12px;
-    --chat-border-radius: 8px;
-    --chat-min-width: 150px;
-  }
-}
-
-/* Tablet optimizations */
-@media (min-width: 769px) and (max-width: 1024px) {
-  :root {
-    --chat-padding: 14px;
-    --chat-border-radius: 10px;
-  }
-}
-```
-
 ## Best Practices
 
-1. **Use CSS Variables**: Always use CSS variables instead of hardcoded values
+1. **Use CSS Variables**: Always use CSS variables instead of hardcoded values for consistency
 2. **Maintain Contrast**: Ensure text colors provide sufficient contrast with background colors
 3. **Test Dark Mode**: Verify your customizations work well in both light and dark themes
 4. **Performance**: Keep customizations lightweight to maintain smooth animations
@@ -294,31 +314,3 @@ Customize for different screen sizes:
 - Make sure dark mode variables are defined in `.dark` selector
 - Check that your app properly toggles the `dark` class on the HTML element
 - Verify that CSS variables are being applied in the correct order
-
-## API Reference
-
-### ChatWindow Props
-
-| Prop         | Type      | Default               | Description                       |
-| ------------ | --------- | --------------------- | --------------------------------- |
-| `title`      | `string`  | `"AI Chat Assistant"` | The title displayed in the header |
-| `className`  | `string`  | `""`                  | Additional CSS classes            |
-| `showHeader` | `boolean` | `true`                | Whether to show the header        |
-
-### ChatMessage Props
-
-| Prop      | Type                   | Description                           |
-| --------- | ---------------------- | ------------------------------------- |
-| `message` | `Message`              | The message object to display         |
-| `onRetry` | `(id: string) => void` | Callback for retrying failed messages |
-
-### ChatInput Props
-
-| Prop          | Type      | Default                  | Description                   |
-| ------------- | --------- | ------------------------ | ----------------------------- |
-| `placeholder` | `string`  | `"Type your message..."` | Input placeholder text        |
-| `disabled`    | `boolean` | `false`                  | Whether the input is disabled |
-
-## License
-
-MIT License - see LICENSE file for details.

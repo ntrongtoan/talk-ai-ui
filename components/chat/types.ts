@@ -1,11 +1,11 @@
 export interface Message {
   id: string;
-  role: 'user' | 'assistant' | 'system';
+  role: "user" | "assistant" | "system";
   content: string;
   timestamp: Date;
-  status?: 'sending' | 'sent' | 'error';
+  status?: "sending" | "sent" | "error";
   metadata?: {
-    type?: 'text' | 'markdown' | 'code' | 'file';
+    type?: "text" | "markdown" | "code" | "file";
     language?: string;
     fileName?: string;
     fileSize?: number;
@@ -23,20 +23,7 @@ export interface ChatSession {
 }
 
 export interface ChatSettings {
-  theme?: 'light' | 'dark' | 'auto';
-  messageStyle?: {
-    userBg: string;
-    aiBg: string;
-    borderRadius: string;
-    padding: string;
-    userTextColor: string;
-    aiTextColor: string;
-    systemBg: string;
-    systemTextColor: string;
-    shadow: string;
-    maxWidth: string;
-    minWidth: string;
-  };
+  theme?: "light" | "dark" | "auto";
   features?: {
     markdown: boolean;
     codeHighlighting: boolean;
@@ -51,5 +38,3 @@ export interface ChatState {
   error: string | null;
   settings: ChatSettings;
 }
-
-

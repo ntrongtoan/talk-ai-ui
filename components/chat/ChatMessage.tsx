@@ -3,7 +3,6 @@
 import React from "react";
 import { Message } from "./types";
 import { Copy, AlertCircle, CheckCircle, Clock } from "lucide-react";
-import { useMessageStyle } from "./hooks";
 
 interface ChatMessageProps {
   message: Message;
@@ -11,25 +10,6 @@ interface ChatMessageProps {
 }
 
 export function ChatMessage({ message, onRetry }: ChatMessageProps) {
-  const messageStyle = useMessageStyle();
-  
-  // Default message style fallback
-  const defaultStyle = {
-    userBg: "#6366f1",
-    aiBg: "#f3f4f6",
-    borderRadius: "12px",
-    padding: "16px",
-    userTextColor: "#ffffff",
-    aiTextColor: "#1f2937",
-    systemBg: "#fef3c7",
-    systemTextColor: "#92400e",
-    shadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
-    maxWidth: "max-content",
-    minWidth: "200px",
-  };
-  
-  const style = messageStyle || defaultStyle;
-
   const isUser = message.role === "user";
   const isAI = message.role === "assistant";
   const isSystem = message.role === "system";
@@ -50,33 +30,18 @@ export function ChatMessage({ message, onRetry }: ChatMessageProps) {
   const getMessageStyle = () => {
     if (isUser) {
       return {
-        backgroundColor: style.userBg,
-        borderRadius: style.borderRadius,
-        padding: style.padding,
-        color: style.userTextColor,
-        boxShadow: style.shadow,
-        maxWidth: style.maxWidth,
-        minWidth: style.minWidth,
+        backgroundColor: "var(--chat-user-bg)",
+        color: "var(--chat-user-text)",
       };
     } else if (isAI) {
       return {
-        backgroundColor: style.aiBg,
-        borderRadius: style.borderRadius,
-        padding: style.padding,
-        color: style.aiTextColor,
-        boxShadow: style.shadow,
-        maxWidth: style.maxWidth,
-        minWidth: style.minWidth,
+        backgroundColor: "var(--chat-ai-bg)",
+        color: "var(--chat-ai-text)",
       };
     } else {
       return {
-        backgroundColor: style.systemBg,
-        borderRadius: style.borderRadius,
-        padding: style.padding,
-        color: style.systemTextColor,
-        boxShadow: style.shadow,
-        maxWidth: style.maxWidth,
-        minWidth: style.minWidth,
+        backgroundColor: "var(--chat-system-bg)",
+        color: "var(--chat-system-text)",
       };
     }
   };
@@ -86,69 +51,51 @@ export function ChatMessage({ message, onRetry }: ChatMessageProps) {
   };
 
   const formatTimestamp = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    return new Date(date).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   return (
     <div
       className={`flex ${isUser ? "justify-end" : "justify-start"} mb-6 group`}
+      style={{ marginBottom: "var(--chat-message-margin)" }}
     >
       <div className="max-w-xs lg:max-w-md xl:max-w-lg 2xl:max-w-2xl">
         {/* Message Bubble */}
-        <div className="relative transition-all duration-200 hover:scale-[1.02]" style={getMessageStyle()}>
+        <div className="chat-message relative" style={getMessageStyle()}>
           {/* Message Content */}
-          <div className="break-words">
-            {isSystem && (
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-xs font-semibold uppercase tracking-wider text-amber-700">
-                  System
-                </span>
-              </div>
-            )}
-
-            <div className="whitespace-pre-wrap leading-relaxed text-sm">
-              {message.content}
-            </div>
+          <div className="whitespace-pre-wrap break-words">
+            {message.content}
           </div>
 
-          {/* Message Actions */}
-          <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-200">
-            <div className="flex items-center gap-1 bg-white/80 backdrop-blur-sm rounded-lg p-1 shadow-sm">
-              <button
-                onClick={copyToClipboard}
-                className="p-1.5 rounded-md hover:bg-gray-100 transition-colors duration-150"
-                title="Copy message"
-              >
-                <Copy className="w-3.5 h-3.5" />
-              </button>
-
-              {message.status === "error" && onRetry && (
+          {/* Message Footer */}
+          <div className="flex items-center justify-between mt-3 text-xs opacity-70">
+            <span>{formatTimestamp(message.timestamp)}</span>
+            <div className="flex items-center gap-2">
+              {getStatusIcon()}
+              {isAI && (
                 <button
-                  onClick={() => onRetry(message.id)}
-                  className="p-1.5 rounded-md hover:bg-red-50 transition-colors duration-150"
-                  title="Retry message"
+                  onClick={copyToClipboard}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-black/10 rounded"
+                  title="Copy message"
                 >
-                  <AlertCircle className="w-3.5 h-3.5 text-red-500" />
+                  <Copy className="w-3 h-3" />
                 </button>
               )}
             </div>
           </div>
-        </div>
 
-        {/* Message Footer */}
-        <div
-          className={`flex items-center gap-2 mt-3 ${
-            isUser ? "justify-end" : "justify-start"
-          }`}
-        >
-          <span className="text-xs text-gray-400 font-medium">
-            {formatTimestamp(message.timestamp)}
-          </span>
-
-          {/* Status Indicator */}
-          <div className="flex items-center">
-            {getStatusIcon()}
-          </div>
+          {/* Error Retry Button */}
+          {message.status === "error" && onRetry && (
+            <button
+              onClick={() => onRetry(message.id)}
+              className="mt-2 text-xs text-red-600 hover:text-red-800 underline"
+            >
+              Retry
+            </button>
+          )}
         </div>
       </div>
     </div>

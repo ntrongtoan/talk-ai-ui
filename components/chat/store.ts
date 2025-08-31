@@ -16,19 +16,6 @@ interface ChatStore extends ChatState {
 
 const defaultSettings: ChatSettings = {
   theme: "auto",
-  messageStyle: {
-    userBg: "#6366f1",
-    aiBg: "#f3f4f6",
-    borderRadius: "12px",
-    padding: "16px",
-    userTextColor: "#ffffff",
-    aiTextColor: "#1f2937",
-    systemBg: "#fef3c7",
-    systemTextColor: "#92400e",
-    shadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
-    maxWidth: "max-content",
-    minWidth: "200px",
-  },
   features: {
     markdown: true,
     codeHighlighting: true,
@@ -121,17 +108,31 @@ export const useChatStore = create<ChatStore>()(
                 ? { ...msg, status: "sending" as const }
                 : msg
             ),
+            isLoading: true,
+            error: null,
           }));
 
-          // Implement retry logic here
-          // For now, just simulate a retry
-          setTimeout(() => {
+          try {
+            // Simulate retry - replace with actual implementation
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+
             set((state) => ({
               messages: state.messages.map((msg) =>
                 msg.id === messageId ? { ...msg, status: "sent" as const } : msg
               ),
+              isLoading: false,
             }));
-          }, 1000);
+          } catch (error) {
+            set((state) => ({
+              messages: state.messages.map((msg) =>
+                msg.id === messageId
+                  ? { ...msg, status: "error" as const }
+                  : msg
+              ),
+              error: "Failed to retry message",
+              isLoading: false,
+            }));
+          }
         },
 
         addMessage: (message: Message) => {
@@ -158,10 +159,6 @@ export const useChatStore = create<ChatStore>()(
       }),
       {
         name: "chat-store",
-        partialize: (state) => ({
-          messages: state.messages,
-          settings: state.settings,
-        }),
       }
     )
   )
