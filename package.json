@@ -4,11 +4,29 @@
   "description": "A modern, customizable React UI library for building AI-powered chat interfaces. Built with React + TypeScript, Next.js ready, styled with Tailwind CSS and shadcn/ui, and optimized for AI use cases like streaming responses, Markdown support, and custom themes.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev --turbopack -p 3030",
+    "build": "next build --turbopack",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "biome check",
+    "format": "biome format --write"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.23",
+    "@ai-sdk/react": "^2.0.28",
+    "ai": "^5.0.28",
+    "next": "15.5.2",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.0",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   },
   "keywords": [
     "react",
