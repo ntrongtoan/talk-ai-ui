@@ -13,6 +13,12 @@ export interface Message {
   };
 }
 
+export interface QuickReply {
+  id: string;
+  text: string;
+  value?: string;
+}
+
 export interface ChatSession {
   id: string;
   title: string;

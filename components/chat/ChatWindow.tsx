@@ -5,28 +5,35 @@ import { ChatMessages } from "./ChatMessages";
 import { ChatInput } from "./ChatInput";
 import { ChatHeader } from "./ChatHeader";
 import { ErrorDisplay } from "./ErrorDisplay";
+import { QuickReplyOverlay } from "./QuickReplyOverlay";
 import {
   useMessages,
   useError,
   useClearMessages,
   useRetryMessage,
+  useSendMessage,
 } from "./hooks";
+
+import { QuickReply } from "./types";
 
 interface ChatWindowProps {
   title?: string;
   className?: string;
   showHeader?: boolean;
+  quickReplies?: QuickReply[];
 }
 
 export function ChatWindow({
   title = "AI Chat Assistant",
   className = "",
   showHeader = true,
+  quickReplies = [],
 }: ChatWindowProps) {
   const messages = useMessages();
   const error = useError();
   const clearMessages = useClearMessages();
   const retryMessage = useRetryMessage();
+  const sendMessage = useSendMessage();
 
   const handleClearMessages = () => {
     if (
@@ -76,6 +83,16 @@ export function ChatWindow({
     reader.readAsText(file);
   };
 
+  const handleQuickReplySelect = async (reply: QuickReply) => {
+    const messageContent = reply.value || reply.text;
+    
+    try {
+      await sendMessage(messageContent);
+    } catch (error) {
+      console.error("Failed to send quick reply:", error);
+    }
+  };
+
   return (
     <div
       className={`chat-window flex flex-col h-full overflow-hidden ${className}`}
@@ -98,8 +115,14 @@ export function ChatWindow({
       {/* Messages Area */}
       <ChatMessages onRetry={retryMessage} />
 
-      {/* Input Area */}
-      <ChatInput disabled={false} />
+      {/* Input Area with Quick Reply Overlay */}
+      <div className="relative">
+        <QuickReplyOverlay 
+          replies={quickReplies} 
+          onSelectReply={handleQuickReplySelect}
+        />
+        <ChatInput disabled={false} />
+      </div>
     </div>
   );
 }

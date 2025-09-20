@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChatWindow } from "../../components/chat";
+import { ChatWindow, QuickReplyExample } from "../../components/chat";
 
 export default function ChatDemoPage() {
   return (
@@ -27,6 +27,14 @@ export default function ChatDemoPage() {
               className="h-full"
               showHeader={true}
             />
+          </div>
+
+          {/* Quick Reply Example */}
+          <div className="h-[600px]">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              Quick Reply Demo
+            </h2>
+            <QuickReplyExample />
           </div>
 
           {/* Minimal Chat Window */}
@@ -147,12 +155,15 @@ export default function ChatDemoPage() {
           </div>
         </div>
 
-        {/* Usage Instructions */}
-        <div className="mt-16 bg-white rounded-lg shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Start</h2>
+         {/* Usage Instructions */}
+         <div className="mt-16 bg-white rounded-lg shadow-lg p-8">
+           <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Start</h2>
 
-          <div className="bg-gray-900 rounded-lg p-6 text-green-400 font-mono text-sm overflow-x-auto">
-            <pre>{`import { ChatWindow } from '@/components/chat';
+           <div className="space-y-6">
+             <div>
+               <h3 className="text-lg font-semibold text-gray-800 mb-3">Basic Usage</h3>
+               <div className="bg-gray-900 rounded-lg p-6 text-green-400 font-mono text-sm overflow-x-auto">
+                 <pre>{`import { ChatWindow } from '@/components/chat';
 
 function MyApp() {
   return (
@@ -162,8 +173,33 @@ function MyApp() {
     />
   );
 }`}</pre>
-          </div>
-        </div>
+               </div>
+             </div>
+
+             <div>
+               <h3 className="text-lg font-semibold text-gray-800 mb-3">With Quick Replies</h3>
+               <div className="bg-gray-900 rounded-lg p-6 text-green-400 font-mono text-sm overflow-x-auto">
+                 <pre>{`import { ChatWindow, QuickReply } from '@/components/chat';
+
+function MyApp() {
+  const quickReplies: QuickReply[] = [
+    { id: "1", text: "👋 Hello", value: "Hello! How can I help?" },
+    { id: "2", text: "❓ Help", value: "I need assistance" },
+    { id: "3", text: "💡 Ideas", value: "Give me some creative ideas" },
+  ];
+
+  return (
+    <ChatWindow 
+      title="AI Assistant"
+      showHeader={true}
+      quickReplies={quickReplies}
+    />
+  );
+}`}</pre>
+               </div>
+             </div>
+           </div>
+         </div>
       </div>
     </div>
   );

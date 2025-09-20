@@ -70,6 +70,7 @@ export function ChatInput({
     setIsComposing(false);
   };
 
+
   const isInputValid = input.trim().length > 0 && !isLoading && !disabled;
 
   return (
@@ -77,7 +78,7 @@ export function ChatInput({
       className="chat-input border-t p-4"
       style={{ borderColor: "var(--chat-input-border)" }}
     >
-      <form onSubmit={handleSubmit} className="flex items-end gap-3">
+        <form onSubmit={handleSubmit} className="flex items-end gap-3">
         {/* File Upload Button */}
         <button
           type="button"
@@ -165,11 +166,11 @@ export function ChatInput({
         </div>
       )}
 
-      {isLoading && (
-        <div className="mt-2 text-sm text-gray-500">
-          Please wait while your message is being processed...
-        </div>
-      )}
+       {isLoading && (
+         <div className="mt-2 text-sm text-gray-500">
+           Please wait while your message is being processed...
+         </div>
+       )}
     </div>
   );
 }
