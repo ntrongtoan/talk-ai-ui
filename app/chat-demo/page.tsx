@@ -26,7 +26,6 @@ export default function ChatDemoPage() {
               title="Basic Assistant"
               className="h-full"
               showHeader={true}
-              showSettings={true}
             />
           </div>
 
@@ -39,7 +38,6 @@ export default function ChatDemoPage() {
               title="Minimal Chat"
               className="h-full"
               showHeader={true}
-              showSettings={false}
             />
           </div>
 
@@ -52,7 +50,6 @@ export default function ChatDemoPage() {
               title="Custom Styled"
               className="h-full"
               showHeader={true}
-              showSettings={true}
             />
           </div>
 
@@ -65,7 +62,6 @@ export default function ChatDemoPage() {
               title="Full Featured Assistant"
               className="h-full"
               showHeader={true}
-              showSettings={true}
             />
           </div>
         </div>
@@ -163,7 +159,6 @@ function MyApp() {
     <ChatWindow 
       title="My AI Assistant"
       showHeader={true}
-      showSettings={true}
     />
   );
 }`}</pre>
